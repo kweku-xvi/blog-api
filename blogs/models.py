@@ -13,6 +13,9 @@ class Blog(models.Model):
     time_published = models.TimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.id = str(uuid.uuid4())[:13]
