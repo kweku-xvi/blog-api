@@ -2,7 +2,9 @@ from .models import Blog
 from .serializers import BlogSerializer
 from accounts.models import User
 from accounts.permissions import IsVerified
-from django.shortcuts import render
+from datetime import timedelta
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -63,6 +65,7 @@ def create_blog_view(request):
 def get_specific_blog_view(request, blog_id:str):
     if request.method == 'GET':
         blog = get_blog(blog_id=blog_id)
+        
         serializer = BlogSerializer(blog)
 
         return Response(
@@ -98,6 +101,22 @@ def get_all_blogs_view(request):
         return Response(
             {
                 'success':True,
+                'blogs':serializer.data
+            }, status=status.HTTP_200_OK
+        )
+
+
+@api_view(['GET'])
+def get_blogs_within_last_3_months_view(request):
+    if request.method == 'GET':
+        timeframe = timezone.now() - timedelta(days=90)
+        blogs = Blog.objects.filter(created_at__gte=timeframe)
+        serializer = BlogSerializer(blogs, many=True)
+
+        return Response(
+            {
+                'success':True,
+                'message':'Below are blogs posted within last 3 months',
                 'blogs':serializer.data
             }, status=status.HTTP_200_OK
         )
