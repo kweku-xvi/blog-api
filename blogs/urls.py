@@ -9,4 +9,5 @@ urlpatterns = [
     path('user/<str:uid>', views.get_all_user_blogs_view, name='get_all_user_blogs'),
     path('<str:blog_id>/update', views.update_blog_view, name='update_blog'),
     path('<str:blog_id>/delete', views.delete_blog_view, name='delete_blog'),
+    path('within-last-3-months', views.get_blogs_within_last_3_months_view, name='blogs_within_last_3_months'),
 ]
