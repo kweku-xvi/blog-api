@@ -65,6 +65,7 @@ def create_blog_view(request):
 def get_specific_blog_view(request, blog_id:str):
     if request.method == 'GET':
         blog = get_blog(blog_id=blog_id)
+        print(blog.author)
         
         serializer = BlogSerializer(blog)
 
