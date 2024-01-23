@@ -3,7 +3,7 @@ from .serializers import BlogSerializer
 from accounts.models import User
 from accounts.permissions import IsVerified
 from datetime import timedelta
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -107,22 +107,6 @@ def get_all_blogs_view(request):
         )
 
 
-@api_view(['GET'])
-def get_blogs_within_last_3_months_view(request):
-    if request.method == 'GET':
-        timeframe = timezone.now() - timedelta(days=90)
-        blogs = Blog.objects.filter(created_at__gte=timeframe)
-        serializer = BlogSerializer(blogs, many=True)
-
-        return Response(
-            {
-                'success':True,
-                'message':'Below are blogs posted within last 3 months',
-                'blogs':serializer.data
-            }, status=status.HTTP_200_OK
-        )
-
-
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsVerified])
 def update_blog_view(request, blog_id:str):
@@ -179,4 +163,93 @@ def delete_blog_view(request, blog_id:str):
                 'success':True,
                 'message':'Blog deleted successfully'
             }, status=status.HTTP_204_NO_CONTENT
+        )
+
+
+@api_view(['GET'])
+def get_blogs_posted_within_last_month_view(request):
+    if request.method == 'GET':
+        timeframe = timezone.now() - timedelta(days=30)
+        blogs = Blog.objects.filter(created_at__gte=timeframe)
+        serializer = BlogSerializer(blogs, many=True)
+
+        return Response(
+            {
+                'success':True,
+                'message':'Below are blogs posted within last month',
+                'blogs':serializer.data
+            }, status=status.HTTP_200_OK
+        )
+
+
+@api_view(['GET'])
+def get_blogs_posted_within_last_3_months_view(request):
+    if request.method == 'GET':
+        timeframe = timezone.now() - timedelta(days=90)
+        blogs = Blog.objects.filter(created_at__gte=timeframe)
+        serializer = BlogSerializer(blogs, many=True)
+
+        return Response(
+            {
+                'success':True,
+                'message':'Below are blogs posted within last 3 months',
+                'blogs':serializer.data
+            }, status=status.HTTP_200_OK
+        )
+
+
+@api_view(['GET'])
+def get_blogs_posted_within_last_6_months_view(request):
+    if request.method == 'GET':
+        timeframe = timezone.now() - timedelta(days=180)
+        blogs = Blog.objects.filter(created_at__gte=timeframe)
+        serializer = BlogSerializer(blogs, many=True)
+
+        return Response(
+            {
+                'success':True,
+                'message':'Below are blogs posted within last 6 months',
+                'blogs':serializer.data
+            }, status=status.HTTP_200_OK
+        )
+
+
+@api_view(['GET'])
+def get_blogs_posted_within_last_year(request):
+    if request.method == 'GET':
+        timeframe = timezone.now() - timedelta(days=360)
+        blogs = Blog.objects.filter(created_at__gte=timeframe)
+        serializer = BlogSerializer(blogs, many=True)
+
+        return Response(
+            {
+                'success':True,
+                'message':'Below are blogs posted within last year',
+                'blogs':serializer.data
+            }, status=status.HTTP_200_OK
+        )
+
+
+@api_view(['GET'])
+def search_blogs_view(request):
+    if request.method == 'GET':
+        title = request.query_params.get('title')
+
+        if not title:
+            return Response(
+                {
+                    'success':False,
+                    'message':'Please provide a search query!'
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        blogs = Blog.objects.filter(title__icontains=title)
+        serializer = BlogSerializer(blogs, many=True)
+
+        return Response(
+            {
+                'success':True,
+                'message':'Below are your search results;',
+                'blogs':serializer.data
+            }, status=status.HTTP_200_OK
         )
