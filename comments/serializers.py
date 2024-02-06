@@ -10,8 +10,8 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'comment', 'blog', 'user']
 
-    def get_user(self, obj):
+    def get_user(self, obj): # get user's username
         return obj.user.username if obj.user else None
 
-    def get_blog(self, obj):
+    def get_blog(self, obj): # get blog title 
         return obj.blog.title if obj.blog else None
