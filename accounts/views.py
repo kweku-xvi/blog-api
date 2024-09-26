@@ -22,7 +22,7 @@ load_dotenv()
 
 
 @api_view(['POST'])
-def sign_up_view(request):
+def signup(request):
     if request.method == 'POST':
         serializer = SignUpSerializer(data=request.data)
 
@@ -35,7 +35,7 @@ def sign_up_view(request):
             relative_link = reverse('verify_user')
             absolute_url = f'http://{current_site}{relative_link}?token={token}'
             link = str(absolute_url)
-            send_verification_email(email=user.email, username=user.username, link=link)
+            send_verification_email(email=user.email, first_name=user.first_name, link=link)
 
             return Response(
                 {
@@ -53,7 +53,7 @@ def sign_up_view(request):
         
 
 @api_view(['GET'])
-def verify_user_view(request):
+def verify_user(request):
     if request.method == 'GET':
         token = request.GET.get('token')
 
@@ -109,7 +109,7 @@ def verify_user_view(request):
         
 
 @api_view(['POST'])
-def login_view(request):
+def login(request):
     if request.method == 'POST':
         serializer = LoginSerializer(data=request.data)
 
@@ -125,7 +125,7 @@ def login_view(request):
             )
 
 @api_view(['POST'])
-def password_reset_view(request):
+def password_reset(request):
     if request.method == 'POST':
         email = request.data.get('email')
 
@@ -145,7 +145,7 @@ def password_reset_view(request):
             relative_link = reverse('password_reset_confirm')
             absolute_url = f'http://{current_site}{relative_link}?uid={uid}&token={token}'
             link = str(absolute_url)
-            send_password_reset_mail(email=user.email, username=user.username, link=link)
+            send_password_reset_mail(email=user.email, first_name=user.first_name, link=link)
 
             return Response(
                 {
@@ -170,7 +170,7 @@ def password_reset_view(request):
 
 
 @api_view(['PATCH'])
-def password_reset_confirm_view(request):
+def password_reset_confirm(request):
     if request.method == 'PATCH':
         token = request.data.get('token')
         uid = request.data.get('uid')
@@ -223,7 +223,7 @@ def password_reset_confirm_view(request):
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
-def get_all_users_view(request):
+def get_all_users(request):
     if request.method == 'GET':
         users = User.objects.all()
 
@@ -240,7 +240,7 @@ def get_all_users_view(request):
 
 @api_view(['GET'])
 @permission_classes([IsVerified])
-def search_users_view(request):
+def search_users(request):
     if request.method == 'GET':
         query = request.query_params.get('query')
 

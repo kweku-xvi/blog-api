@@ -9,7 +9,9 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'middle_name', 'last_name', 'username', 'email', 'password']
+        fields = ['id', 'first_name', 'middle_name', 'last_name', 'username', 'email', 'password']
+
+        read_only_fields = ['id']
 
     def validate(self, attrs):
         username = attrs.get('username', '')
@@ -68,4 +70,4 @@ class LoginSerializer(serializers.Serializer):
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'middle_name', 'last_name', 'username', 'email']
+        fields = ['id', 'first_name', 'middle_name', 'last_name', 'username', 'email']

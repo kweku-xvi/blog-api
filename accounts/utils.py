@@ -6,30 +6,30 @@ load_dotenv()
 
 client = Courier(auth_token=os.getenv('AUTH_TOKEN'))
 
-def send_verification_email(username:str, email:str, link:str):
+def send_verification_email(first_name:str, email:str, link:str):
     client.send_message(
         message={
             "to": {
             "email": email,
             },
-            "template": "HQRFKDHDK84B16GJAQ7PWPFATXS8",
+            "template": os.getenv('EMAIL_VERIFICATION_TEMPLATE'),
             "data": {
-            "username": username,
+            "firstName": first_name,
             "link": link,
             },
         }
     )
 
 
-def send_password_reset_mail(username:str, email:str, link:str):
+def send_password_reset_mail(first_name:str, email:str, link:str):
     client.send_message(
         message={
             "to": {
             "email": email,
             },
-            "template": "WF7909Y7ZWMNWNNTNNQRHDTBKDF4",
+            "template": os.getenv('PASSWORD_RESET_TEMPLATE'),
             "data": {
-            "username": username,
+            "firstName": first_name,
             "link": link,
             },
         }

@@ -18,7 +18,7 @@ def get_blog(blog_id:str):
             {
                 'success':False,
                 'message':'Blog does not exist'
-            }, status=status.HTTP_400_BAD_REQUEST
+            }, status=status.HTTP_404_NOT_FOUND
         )
     return blog
 
@@ -38,7 +38,7 @@ def get_user(uid:str):
 
 @api_view(['POST'])
 @permission_classes([IsVerified])
-def create_blog_view(request):
+def create_blog(request):
     if request.method == 'POST':
         user = request.user
         serializer = BlogSerializer(data=request.data)
@@ -62,10 +62,9 @@ def create_blog_view(request):
 
 
 @api_view(['GET'])
-def get_specific_blog_view(request, blog_id:str):
+def get_specific_blog(request, blog_id:str):
     if request.method == 'GET':
         blog = get_blog(blog_id=blog_id)
-        print(blog.author)
         
         serializer = BlogSerializer(blog)
 
@@ -78,7 +77,7 @@ def get_specific_blog_view(request, blog_id:str):
 
 
 @api_view(['GET'])
-def get_all_user_blogs_view(request, uid:str):
+def get_all_user_blogs(request, uid:str):
     if request.method == 'GET':
         user = get_user(uid=uid)
         blogs = Blog.objects.filter(author=user)
@@ -94,7 +93,7 @@ def get_all_user_blogs_view(request, uid:str):
 
 
 @api_view(['GET'])
-def get_all_blogs_view(request):
+def get_all_blogs(request):
     if request.method == 'GET':
         blogs = Blog.objects.all()
         serializer = BlogSerializer(blogs, many=True)
@@ -109,7 +108,7 @@ def get_all_blogs_view(request):
 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsVerified])
-def update_blog_view(request, blog_id:str):
+def update_blog(request, blog_id:str):
     if request.method == 'PUT' or request.method == 'PATCH':
         user = request.user
         blog = get_blog(blog_id=blog_id)
@@ -144,7 +143,7 @@ def update_blog_view(request, blog_id:str):
 
 @api_view(['DELETE'])
 @permission_classes([IsVerified])
-def delete_blog_view(request, blog_id:str):
+def delete_blog(request, blog_id:str):
     if request.method == 'DELETE':
         user = request.user
         blog = get_blog(blog_id=blog_id)
@@ -167,7 +166,7 @@ def delete_blog_view(request, blog_id:str):
 
 
 @api_view(['GET'])
-def get_blogs_posted_within_last_month_view(request):
+def get_blogs_posted_within_last_month(request):
     if request.method == 'GET':
         timeframe = timezone.now() - timedelta(days=30)
         blogs = Blog.objects.filter(created_at__gte=timeframe)
@@ -183,7 +182,7 @@ def get_blogs_posted_within_last_month_view(request):
 
 
 @api_view(['GET'])
-def get_blogs_posted_within_last_3_months_view(request):
+def get_blogs_posted_within_last_3_months(request):
     if request.method == 'GET':
         timeframe = timezone.now() - timedelta(days=90)
         blogs = Blog.objects.filter(created_at__gte=timeframe)
@@ -199,7 +198,7 @@ def get_blogs_posted_within_last_3_months_view(request):
 
 
 @api_view(['GET'])
-def get_blogs_posted_within_last_6_months_view(request):
+def get_blogs_posted_within_last_6_months(request):
     if request.method == 'GET':
         timeframe = timezone.now() - timedelta(days=180)
         blogs = Blog.objects.filter(created_at__gte=timeframe)
@@ -231,7 +230,7 @@ def get_blogs_posted_within_last_year(request):
 
 
 @api_view(['GET'])
-def search_blogs_view(request):
+def search_blogs(request):
     if request.method == 'GET':
         title = request.query_params.get('title')
 
