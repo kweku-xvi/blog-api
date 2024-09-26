@@ -37,7 +37,7 @@ def get_comment(comment_id:str):
 
 @api_view(['POST'])
 @permission_classes([IsVerified])
-def add_comment_view(request, blog_id:str):
+def add_comment(request, blog_id:str):
     if request.method == 'POST':
         user = request.user
         blog = get_blog(blog_id=blog_id)
@@ -62,7 +62,7 @@ def add_comment_view(request, blog_id:str):
         
 
 @api_view(['GET'])
-def get_specific_comment_view(request, comment_id:str):
+def get_specific_comment(request, comment_id:str):
     if request.method == 'GET':
         comment = get_comment(comment_id=comment_id)
         serializer = CommentSerializer(comment)
@@ -76,7 +76,7 @@ def get_specific_comment_view(request, comment_id:str):
 
 
 @api_view(['GET'])
-def get_comments_on_blog_view(request, blog_id:str):
+def get_comments_on_blog(request, blog_id:str):
     if request.method == 'GET':
         blog = get_blog(blog_id=blog_id)
         comments = Comment.objects.filter(blog=blog)
@@ -91,7 +91,7 @@ def get_comments_on_blog_view(request, blog_id:str):
 
 
 @api_view(['GET'])
-def get_comments_by_user_view(request, uid:str):
+def get_comments_by_user(request, uid:str):
     if request.method == 'GET':
         user = User.objects.get(id=uid)
 
@@ -116,7 +116,7 @@ def get_comments_by_user_view(request, uid:str):
 
 @api_view(['DELETE'])
 @permission_classes([IsVerified])
-def delete_comment_view(request, comment_id:str):
+def delete_comment(request, comment_id:str):
     if request.method == 'DELETE':
         user = request.user
         comment = get_comment(comment_id=comment_id)
